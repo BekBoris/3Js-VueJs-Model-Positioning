@@ -51,6 +51,7 @@ export default {
       gltf: null,
       orbit: null,
       control: null,
+
       selectTool: "position",
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
@@ -63,6 +64,7 @@ export default {
         // SET AND ADD CAMERA
         this.camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
         this.camera.position.z = 1;
+
         // ADD SCENE
         this.scene = new THREE.Scene();
         // ADD LIGHT TO SCENE
@@ -82,22 +84,27 @@ export default {
         this.gridHelper = new THREE.GridHelper( size, divisions );
         this.scene.add( this.gridHelper );
 
+        console.log("hello world");
+
         // SET ORBIT CONTROLS
         this.orbit = new OrbitControls( this.camera, this.renderer.domElement );
-        this.orbit.addEventListener("change", () => this.renderer.render(this.scene, this.camera));
         this.camera.position.set( 0, 2, 2 );
         this.orbit.update();
+
+        this.orbit.addEventListener("change", () => this.renderer.render(this.scene, this.camera));
 
         // SET MODEL CONTROL
         this.control = new TransformControls( this.camera, this.renderer.domElement );
         this.control.setSize(1);
         this.control.addEventListener( 'change', () => { this.renderer.render(this.scene, this.camera); });
 
+
         // EVENT LISTNER TO ENABLE ORBIT CAMERA AND CHANGE VALUE OF INPUTS
         this.control.addEventListener( 'dragging-changed', ( event ) => {
-          this.orbit.enabled = ! event.value});
           const gltf = this.gltf[this.selectTool];
           this[this.selectTool] = {x: gltf.x, y: gltf.y, z: gltf.z}
+          this.orbit.enabled = ! event.value});
+
 
 
         // ADD GLTFLOADER
@@ -120,9 +127,6 @@ export default {
           console.log(error);
         });
 
-        this.renderer.render(this.scene, this.camera);
-
-
     },
 
     // CONTROLS SET MODE CHANGE
@@ -144,7 +148,7 @@ export default {
     }
   },
 
-    // INPUT CHAGE 
+    // INPUT CHAGE
     inputChange: function(e) {
       const selectOpt = e.target.name
       const setNum = this[selectOpt];
